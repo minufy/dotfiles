@@ -68,6 +68,7 @@ end
 
 local function applyAutoRequire(uri, row, name, result, fmt, fullKeyPath)
     local quotedResult = ('%q'):format(result)
+
     if fmt.quot == "'" then
         quotedResult = ([['%s']]):format(quotedResult:sub(2, -2)
             :gsub([[']], [[\']])
@@ -75,14 +76,8 @@ local function applyAutoRequire(uri, row, name, result, fmt, fullKeyPath)
         )
     end
 
-    if fmt.pair then
-        quotedResult = ('(%s)'):format(quotedResult)
-    else
-        quotedResult = (' %s'):format(quotedResult)
-    end
-
     local requireName = config.get(uri, "Lua.completion.requireFunction")
-    local text = ('local %s = %s%s%s\n'):format(
+    local text = ('local %s = %s(%s)%s\n'):format(
         name,
         requireName,
         quotedResult,
